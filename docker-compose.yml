@@ -1,0 +1,27 @@
+volumes:
+  db-data:
+
+services:
+  web:
+    build: .
+    command: bin/rails server -b 0.0.0.0
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/product-register'
+    tty: true
+    stdin_open: true
+    environment:
+      - 'DATABASE_PASSWORD=postgres'
+      - 'RAILS_ENV=development'
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: postgres:15
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_PASSWORD=postgres'
